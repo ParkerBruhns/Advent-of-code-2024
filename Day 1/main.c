@@ -5,6 +5,7 @@
 int compare(const void* a, const void* b);
 char* int_arr_str(int arr[], int arr_len);
 
+// HELLO
 int main() {
    FILE* fptr;
    fptr = fopen("input.txt", "r");
