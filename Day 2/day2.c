@@ -1,48 +1,89 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-void print_2d_arr(int arr[][1000], int arr_len, int arr_height);
+void print_2d_arr(int** arr, int cols, int rows);
 
 int main() {
    FILE* fptr = fopen("input.txt", "r");
+   if (fptr == NULL) {
+      fprintf(stderr, "Failed to open file");
+      return EXIT_FAILURE;
+   }
 
-   // 50 colums, 1000 rows
-   int arr_len = 50;
-   int arr_height = 1000;
-   int arr[50][1000];
+   // 20 colums, 1000 rows
+   int rows = 1000;
+   int cols = 20;
+
+   // Rows memory allocation
+   int** arr = (int**) malloc(rows * sizeof(int*));
+   if (arr == NULL) {
+      fprintf(stderr, "Memory allocation failed for rows\n");
+      return EXIT_FAILURE;
+   }
+
+   // Colums memory allocation
+   for (int i = 0; i < rows; i++) {
+      arr[i] = (int*) malloc(cols * sizeof(int));
+      if (arr[i] == NULL) {
+         fprintf(stderr, "Memory allocation failed for cols");
+         return EXIT_FAILURE;
+      }
+   }
 
    char line[50];
-   int num, count;
-   int index = 0;
+   int num;
+   int current_row = 0;
    while (fgets(line, sizeof(line), fptr)) {
-      count = 0;
       char* token = strtok(line, " \t\n");
+
+      int current_col = 0;
       while (token != NULL) {
          if (sscanf(token, "%d", &num) == 1) {
-            arr[count][index] = num;
-            count++;
+            arr[current_row][current_col] = num;
+            current_col++;
          } else {
-            printf("Failed");
-            return 1;
+            puts("Failed");
+            return EXIT_FAILURE;
          }
          token = strtok(NULL, " \t\n");
       }
-      index++;
+      current_row++;
    }
 
-   print_2d_arr(arr, arr_len, arr_height);
+   for (int i = 0; i < rows; i++) {
+      int inc_dec = 0;
+      int prev = 0;
+      for (int j = 0; j < cols; j++) {
+         if (inc_dec == 0) {
+            prev = arr[i][j];
+         } else if (inc_dec == 1) {
 
+         } else if (inc_dec == 2) {
+
+         }
+      }
+   }
+
+   print_2d_arr(arr, cols, rows);
+
+   for (int i = 0; i < rows; i++) {
+      free(arr[i]);
+   }
+   free(arr);
 }
 
-void print_2d_arr(int arr[][1000], int arr_len, int arr_height) {
-   for (int j = 0; j < arr_height; j++) {
+void print_2d_arr(int** arr, int cols, int rows) {
+   for (int i = 0; i < rows; i++) {
       printf("[");
-      for (int i = 0; i < arr_len; i++) {
+      int printed_any = 0;
+      for (int j = 0; j < cols; j++) {
          if (arr[i][j] != 0) {
-            printf("%d", arr[i][j]);
-            if (j != arr_len - 1) {
+            if (printed_any) {
                printf(", ");
             }
+            printf("%d", arr[i][j]);
+            printed_any = 1;
          }
       }
       printf("]\n");
